@@ -10,6 +10,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ *  暴露接口的类
+ */
 public class ExportInterfaces extends AbstractBean {
     private static DistributeZK distributeZK;
 
@@ -21,6 +24,10 @@ public class ExportInterfaces extends AbstractBean {
         }
     }
 
+    /**
+     * 将接口暴露给zk集群，也就是向zk集群注册
+     * @throws Exception
+     */
     public void export() throws Exception {
 //        获取项目路径
         String basepath = argsInfo.basepath;
@@ -36,6 +43,13 @@ public class ExportInterfaces extends AbstractBean {
         }
         distributeZK.CreateNodeAndGetPersistentNodeName(argsInfo.path+"/"+argsInfo.hostname+":"+argsInfo.port,javaFileToString);
     }
+
+    /**
+     *
+     * @param path  路径
+     * @return   返回原生的接口，不包含接口的包
+     * @throws Exception
+     */
     private String getJavaFileToString(String path) throws Exception {
         File file = new File(path);
         FileReader fileReader = new FileReader(file);
