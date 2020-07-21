@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * server短的核心代码，执行函数并返回
  */
 public class ReceiveMessageAndExcute implements Runnable {
-    private MessagePrepare Message;
+    private MessageGreatePrepare Message;
     private Channel channel;
-    public ReceiveMessageAndExcute(MessagePrepare Message,Channel channel){
+    public ReceiveMessageAndExcute(MessageGreatePrepare Message,Channel channel){
         this.Message = Message;
         this.channel = channel;
     }
@@ -32,15 +32,17 @@ public class ReceiveMessageAndExcute implements Runnable {
         /**
          * 获取参数
          */
-        String classname = Message.getClassname();
-        String methodname = Message.getMethodname();
-        String[] paragrames = Message.getParagrames();
-        String[] realParagrames = Message.getRealparagrames();
+        String classname = Message.getInterfaceName();
+        String methodname = Message.getMethoedName();
+        Class[] paragrames = Message.getMethodParagrames();
+        Object[] realParagrames = Message.getRealMethodParagrames();
         /**
          * 这里先留下来，等ioc容器起来再说
          */
         ConcurrentHashMap<String, Object> myIoc = AbstractBean.MyIoc;
-        String s = AbstractBean.ClassnameToReferenceName.get(classname);
+        String[] split = classname.split("\\.");
+        String s = AbstractBean.ClassnameToReferenceName.get(split[split.length-1]);
+        System.out.println(s);
         /**
          * 通过类名来找到具体的实现类的实例
          */
@@ -50,9 +52,9 @@ public class ReceiveMessageAndExcute implements Runnable {
          * 先对参数类型做一波解析,得到函数和具体的实际的参数值,并执行
          */
         Class<?> clazz = target.getClass();
-        Class[] paragrames1 = getParagrames(paragrames);
+        Class[] paragrames1 = paragrames;
         Method method = clazz.getMethod(methodname, paragrames1);
-        Object invoke = method.invoke(target, getReaaParagrames(paragrames1, realParagrames));
+        Object invoke = method.invoke(target, realParagrames);
         /**
          * 组装答案，并传递给远程的客户端。
          */
@@ -64,7 +66,7 @@ public class ReceiveMessageAndExcute implements Runnable {
          */
         channel.writeAndFlush(messageForNetty);
     }
-
+    @Deprecated
     public Class[] getParagrames(String[] args){
         Class[] object = new Class[args.length];
         for (int i = 0; i < args.length; i++) {
@@ -72,7 +74,7 @@ public class ReceiveMessageAndExcute implements Runnable {
         }
         return object;
     }
-
+    @Deprecated
     public Object[] getReaaParagrames(Class[] paragrames,String[] str){
         Object[] objects = new Object[paragrames.length];
         for (int i = 0; i < paragrames.length; i++) {
