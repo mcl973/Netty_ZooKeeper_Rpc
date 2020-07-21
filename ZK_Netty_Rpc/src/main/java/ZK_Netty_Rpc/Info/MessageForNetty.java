@@ -1,17 +1,18 @@
+
 package ZK_Netty_Rpc.Info;
 
 import java.io.Serializable;
 
 public class MessageForNetty implements Serializable {
     private long serialVersionUID = 1L;
-    private MessagePrepare messagePrepare;
+    private MessageGreatePrepare messagePrepare;
     private MessageResult messageResult;
 
-    public MessagePrepare getMessagePrepare() {
+    public MessageGreatePrepare getMessagePrepare() {
         return messagePrepare;
     }
 
-    public void setMessagePrepare(MessagePrepare messagePrepare) {
+    public void setMessagePrepare(MessageGreatePrepare messagePrepare) {
         this.messagePrepare = messagePrepare;
     }
 
