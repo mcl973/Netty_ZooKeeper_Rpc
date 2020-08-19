@@ -20,7 +20,7 @@ public class IPPort{
     private String ip;
     private BioSocket socket;
     private Object proxyinstance;
-    private ThreadPoolExecutor threadPoolExecutor = MyThreadPool.getDefaultThreadPoolExcutor();
+    //private ThreadPoolExecutor threadPoolExecutor = MyThreadPool.getDefaultThreadPoolExcutor();
     public IPPort(int port,String ip,Object proxyinstance){
         this.port = port;
         this.ip = ip;
