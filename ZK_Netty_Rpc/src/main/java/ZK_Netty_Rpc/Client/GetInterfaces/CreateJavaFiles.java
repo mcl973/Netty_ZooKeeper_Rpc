@@ -35,61 +35,6 @@ public class CreateJavaFiles {
             fw = new FileWriter(file);
             fw.write(data);
             fw.flush();
-//            /**
-//             * 接口的实现类，只是简单地实现了一下主要是为了动态代理会方便
-//             */
-//            String replace = data.replace("interface", "class");
-//            String[] split = replace.split("\\{");
-//            String s1 = split[0];
-//            String replace1 = argsInfo.ClientRpcMethodPath.replaceAll("/", "\\.");
-//
-//            s1 = s1.replace(classname,classname+argsInfo.aftername);
-//            String replace2 = s1.replace(";", "." + argsInfo.aftername + ";\n" + "import " + argsInfo.Projectname + replace1 + "." + classname + ";\n");
-//            s1 = replace2;
-//            s1 += "implements "+classname+" {";
-//
-//            /**
-//             * 这里要区分一下了，看看返回值到底是什么类型的
-//             * s设置返回值，这一步必不可少。
-//             */
-//            String s2 = split[1];
-//            String s3 = "";
-//            String split2 = s2.split("}")[0];
-//            String[] split1 = split2.split(";");
-//            for (int i = 0; i < split1.length; i++) {
-//                String[] s = split1[i].split(" ");
-//                String[] ss = new String[s.length];
-//                int count=0;
-//                /**
-//                 * 剔除“”和\r\n只保留有效的字符串
-//                 */
-//                for (int i1 = 0; i1 < s.length; i1++) {
-//                    if (!s[i1].equals("\r\n")&&!s[i1].equals(""))
-//                        ss[count++] = s[i1];
-//                }
-//                /**
-//                 * 满足  public,returntype,methodname(....)
-//                 */
-//                if (count>=3) {
-//                    Class type = TypeTranser.getType(ss[1]);
-//                    s3 += split1[i] + "{ return " + TypeTranser.getRealObject(type.getName(), "0") + ";}";
-//                }
-//            }
-//            s3+="\n}";
-//            /**
-//             * 字符串的拼装
-//             */
-//            String Impleclass = s1+s3;
-//            /**
-//             * 开始创建接口的实现类
-//             */
-//            File file2 = new File(path+"/"+argsInfo.aftername);
-//            if(!file2.exists())
-//                file2.mkdirs();
-//            file2 = new File(path+"/"+argsInfo.aftername+"/"+classname+argsInfo.aftername+".java");
-//            fw = new FileWriter(file2);
-//            fw.write(Impleclass);
-//            fw.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
