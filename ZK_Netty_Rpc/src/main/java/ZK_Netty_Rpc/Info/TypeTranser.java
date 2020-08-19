@@ -1,5 +1,5 @@
 package ZK_Netty_Rpc.Info;
-
+@Deprecated
 public class TypeTranser {
     /**
      * 获取参数类型
