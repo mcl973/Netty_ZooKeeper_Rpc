@@ -26,7 +26,12 @@ public class argsInfo {
     //  设置ByteBuffer的申请内存空间的大小
     final public static int ByteBufferSize = 1024;
 //    线程池的默认的线程数
-    public static final int Default_Thread_Number = 5;
+    /**
+     *  根据公式：线程数 = ncpu*（1+w/c），其中ncpu是指的是cpu的核数，w指的是等待是事件wait time，c指的是计算compute。
+     *  如果是计算密集型的那么这里的就是c>>w,那么w/c就是接近于0，那么线程数就是ncpu。
+     *  如果是io密集型的那么这里的就是w>>c,那么w/c就是大于1 的那么线程数可以近似为2*ncpu。
+     */
+    public static final int Default_Thread_Number = Runtime.getRuntime().availableProcessors()*2;
 
     public static final String aftername = "Impl";
 
