@@ -1,13 +1,8 @@
 package ZK_Netty_Rpc.Client.GetInterfaces;
 
-import ZK_Netty_Rpc.Client.BioSocket;
-import ZK_Netty_Rpc.Client.Client;
-import ZK_Netty_Rpc.Extras.MyThreadPool;
-import io.netty.channel.Channel;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
+import ZK_Netty_Rpc.Client.ConnectToServerPool.BioSocket;
+import ZK_Netty_Rpc.Client.ConnectToServerPool.NettyClient.Client;
+import ZK_Netty_Rpc.Client.ConnectToServerPool.ConnectToServerPool;
 
 /**
  * port 端口号
@@ -25,7 +20,8 @@ public class IPPort{
         this.port = port;
         this.ip = ip;
         this.proxyinstance = proxyinstance;
-        this.socket = new BioSocket(ip,port);
+//        this.socket = new BioSocket(ip,port);
+        ConnectToServerPool.addConnextLinkForIPAndPort(ip,port);
     }
 
     public int getPort() {
@@ -40,6 +36,9 @@ public class IPPort{
         return socket;
     }
 
+    public Client getClient() {
+        return ConnectToServerPool.getConnectForIPAndPort(ip,port);
+    }
 
     public Object getProxyinstance() {
         return proxyinstance;
