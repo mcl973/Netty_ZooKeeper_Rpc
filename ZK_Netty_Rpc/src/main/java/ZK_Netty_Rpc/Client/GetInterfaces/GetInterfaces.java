@@ -33,9 +33,10 @@ public class GetInterfaces {
         List<String> nodeChildern = distributeZK.getNodeChildern(basepath);
 //        挨个的获取每一个子节点下的数据，并将其变现为java文件，并加载到内存中
         for (String s : nodeChildern) {
-            String data = distributeZK.SelectNodeDataByName(basepath + "/" + s);
+            String pathname = argsInfo.path+"/"+s.trim();
+            String data = distributeZK.SelectNodeDataByName(pathname);
 //            分割数据，获取到最有用的数据
-            String[] split = data.split("#####");
+            String[] split = data.split(argsInfo.FileSplit);
 //             开始获取java文件的url地址
             String javafileurl = argsInfo.basepath+argsInfo.ClientRpcMethodPath+"/";
 //            没有就创建路径
@@ -65,13 +66,13 @@ public class GetInterfaces {
                  * 现在java文件和接口文件都已经建立好了，那么现在就可以开始进行动态代理了，隐藏底层的具体的业务逻辑了
                  */
 //                1
-                String javaimplname = argsInfo.Projectname+packages+"."+argsInfo.aftername+"."+classname+argsInfo.aftername;
+                String javaimplname = argsInfo.Projectname+packages+"."+classname;
 //                2
                 Class<?> aClass = Class.forName(javaimplname);
-                Object o = aClass.newInstance();
+//                Object o = aClass.newInstance();
 //                3
-                MyInvokeHandler myInvokeHandler = new MyInvokeHandler(o);
-                Object newinstance = GetNewProxyInstance.newinstance(o, myInvokeHandler);
+                MyInvokeHandler myInvokeHandler = new MyInvokeHandler(aClass);
+                Object newinstance = GetNewProxyInstance.newinstance(aClass, myInvokeHandler);
                 /**
                  * 下面就是将这个装载到容器中其，方便进一步的使用。
                  * 这个容器不能和服务器端的容器混用。
