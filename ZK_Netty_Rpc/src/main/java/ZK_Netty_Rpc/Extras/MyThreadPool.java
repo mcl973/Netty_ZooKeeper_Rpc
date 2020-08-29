@@ -2,9 +2,12 @@ package ZK_Netty_Rpc.Extras;
 
 import ZK_Netty_Rpc.Info.argsInfo;
 
+import java.util.Stack;
 import java.util.concurrent.*;
 
 public class MyThreadPool {
+    public static volatile ThreadPoolExecutor tpe;
+    public static Object o = new Object();
     static class MyRejectHandler implements RejectedExecutionHandler{
 
         @Override
@@ -21,13 +24,22 @@ public class MyThreadPool {
             executor.submit(r);
         }
     }
+
     public static ThreadPoolExecutor getDefaultThreadPoolExcutor(){
-        return new ThreadPoolExecutor(argsInfo.Default_Thread_Number,
-                argsInfo.Default_Thread_Number,
-                10,
-                TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(argsInfo.Default_Thread_Number),
-                new MyRejectHandler());
+        if (tpe == null) {
+            synchronized (o) {
+                if (tpe == null) {
+                    tpe = new ThreadPoolExecutor(argsInfo.Default_Thread_Number,
+                            argsInfo.Default_Thread_Number,
+                            10,
+                            TimeUnit.SECONDS,
+                            new ArrayBlockingQueue<Runnable>(argsInfo.Default_Thread_Number),
+                            new MyRejectHandler());
+                    return tpe;
+                }
+            }
+        }
+        return tpe;
     }
     public static ThreadPoolExecutor getMySelfThreadPoolExecutor(int coreThreadSize, int maxYhreadSize, int KeepTime, TimeUnit unit,
                                                                  BlockingQueue<Runnable> waitingQueue,
