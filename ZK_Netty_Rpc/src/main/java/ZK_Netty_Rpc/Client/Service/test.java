@@ -16,27 +16,32 @@ public class test {
         String[] split = name.split("\\.");
         return split[split.length-1];
     }
-    static{
+    public static void main(String[] args) throws Exception {
+        /**
+         * 如果本地无任何的文件，那么先拉取文件，在执行对应的代码。即将下面的代码注释掉。
+         */
+        int n = 100;
         try {
             new GetInterfaces();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    public static void main(String[] args) throws Exception {
-        /**
-         * 如果本地无任何的文件，那么先拉取文件，在执行对应的代码。即将下面的代码注释掉。
-         *
-         */
-        ConcurrentHashMap<String, IPPort> clientRpcIoc = ChannelManager.ClientRpcIoc;
-        IPPort ipPort = clientRpcIoc.get(getclassname(show.class.getName()));
-        show sj = (show) ipPort.getProxyinstance();
-        String showmore = sj.showmore();
-        System.out.println(showmore);
-        int state = sj.state();
-        System.out.println(state);
-        sj.setname("mcl");
-        Scanner sc = new Scanner(System.in);
-        sc.nextLine();
+        for (int i = 0; i < n; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ConcurrentHashMap<String, IPPort> clientRpcIoc = ChannelManager.ClientRpcIoc;
+                    IPPort ipPort = clientRpcIoc.get(getclassname(show.class.getName()));
+                    show sj = (show) ipPort.getProxyinstance();
+                    String showmore = sj.showmore();
+                    System.out.println(showmore);
+                }
+            }).start();
+        }
+//        Scanner scanner = new Scanner(System.in);
+//        scanner.nextInt();
+//        ipPort.getClient().getChannel().closeFuture().sync();
+//        ipPort.getClient().getWorkers().shutdownGracefully();
+
     }
 }
