@@ -1,6 +1,10 @@
 package ZK_Netty_Rpc.Info;
 
 import ZK_Netty_Rpc.App;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+
+import java.io.UnsupportedEncodingException;
 
 public class argsInfo {
     public static String Projectname = "";
@@ -19,12 +23,17 @@ public class argsInfo {
     public final static String NettyServer_BackUp_Path = "/NettyServer_Ha/NettyServer_BackUp_Path";
 
     //    zookeeper集群的连接ip+port
-    public static String connectString = "node2:2181,node3:2181,node4:2181";
+//    public static String connectString = "node2:2181,node3:2181,node4:2181";
+    public static String connectString = "192.168.127.5:2181,192.168.127.6:2181,192.168.127.7:2181";
     //    需要创建的节点
     public static String path = "/ZK_Netty_Rpc";
+    public static String FileSplit = "#####";
+    //  设置分割大小,默认是1k
+    final public static int FrameSplitSize = 1024;
+//    这里不使用网上经常使用的\t的原因是可能类的序列化成的字节数组中也包含了\t，所以这里使用的是自定义的分隔符即五个#
+    public static String FrameSplit = "#####";
+    public static ByteBuf BasedFrame = Unpooled.copiedBuffer(FrameSplit.getBytes());
 
-    //  设置ByteBuffer的申请内存空间的大小
-    final public static int ByteBufferSize = 1024;
 //    线程池的默认的线程数
     /**
      *  根据公式：线程数 = ncpu*（1+w/c），其中ncpu是指的是cpu的核数，w指的是等待是事件wait time，c指的是计算compute。
@@ -36,8 +45,6 @@ public class argsInfo {
     public static final String aftername = "Impl";
 
     public static int maxReadSize = 1024*1024;
-
-//    public static String splitStr = "#####";
 
 /**
  * //    public static int port2 = 8889;
