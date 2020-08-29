@@ -1,14 +1,13 @@
 package ZK_Netty_Rpc.Server.HandlerRpcMethod;
 
 
-import ZK_Netty_Rpc.Extras.MyAutoCollectWork.AbstractBean;
+import ZK_Netty_Rpc.Extras.MyAutoCollectWork.Collect.AbstractBean;
 import ZK_Netty_Rpc.Info.*;
 import io.netty.channel.Channel;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -42,7 +41,6 @@ public class ReceiveMessageAndExcute implements Runnable {
         ConcurrentHashMap<String, Object> myIoc = AbstractBean.MyIoc;
         String[] split = classname.split("\\.");
         String s = AbstractBean.ClassnameToReferenceName.get(split[split.length-1]);
-        System.out.println(s);
         /**
          * 通过类名来找到具体的实现类的实例
          */
@@ -55,6 +53,7 @@ public class ReceiveMessageAndExcute implements Runnable {
         Class[] paragrames1 = paragrames;
         Method method = clazz.getMethod(methodname, paragrames1);
         Object invoke = method.invoke(target, realParagrames);
+//        System.out.println(invoke);
         /**
          * 组装答案，并传递给远程的客户端。
          */
