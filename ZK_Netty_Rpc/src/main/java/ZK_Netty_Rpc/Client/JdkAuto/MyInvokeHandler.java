@@ -1,17 +1,13 @@
     package ZK_Netty_Rpc.Client.JdkAuto;
 
 
-    import ZK_Netty_Rpc.Client.BioSocket;
+    import ZK_Netty_Rpc.Client.ConnectToServerPool.NettyClient.Client;
     import ZK_Netty_Rpc.Client.GetInterfaces.ChannelManager;
     import ZK_Netty_Rpc.Client.GetInterfaces.IPPort;
     import ZK_Netty_Rpc.Info.*;
-    import io.netty.buffer.ByteBuf;
-    import io.netty.channel.Channel;
 
     import java.lang.reflect.InvocationHandler;
     import java.lang.reflect.Method;
-    import java.lang.reflect.Parameter;
-    import java.util.concurrent.BlockingQueue;
 
 
     public class MyInvokeHandler implements InvocationHandler {
@@ -36,24 +32,12 @@
              * 然后传递达到服务器区。
              */
 //            Class<?> aClass = object.getClass();
-            String[] split = object.getName().split("\\.");
+//            String[] split = object.getName().split("\\.");
 //            /**
 //             * 获取远程函数各式参数：类名、函数名、返回值、参数、填充的参数值
 //             */
-            String name = split[split.length-1].split(argsInfo.aftername)[0];
-            String classname = name+""+argsInfo.aftername;
-//            String methodname = method.getName();
-//            String returntype = method.getReturnType().getName();
-//            String paragrames[] = new String[method.getParameters().length];
-//            Parameter[] parameters = method.getParameters();
-//            for (int i = 0; i < parameters.length; i++) {
-//                String[] split1 = parameters[i].getType().getName().split("\\.");
-//                paragrames[i] = split1[split1.length-1];
-//            }
-//            String realParagrames[] = new String[paragrames.length];
-//            for (int i = 0; i < realParagrames.length; i++) {
-//                realParagrames[i] = args[i]+"";
-//            }
+//            String name = split[split.length-1].split(argsInfo.aftername)[0];
+//            String classname = name+""+argsInfo.aftername;
 
             MessageGreatePrepare messageGreatePrepare = new MessageGreatePrepare(object.getName(),method.getName(),method.getParameterTypes(),args);
 
@@ -74,23 +58,29 @@
             MessageForNetty messageForNetty = new MessageForNetty();
             messageForNetty.setMessagePrepare(messageGreatePrepare);
     //        2
-            byte[] bytes = SerializableAndUnSerializable.StringToByte(messageForNetty);
+//            byte[] bytes = SerializableAndUnSerializable.StringToByte(messageForNetty);
             String[] split1 = object.getName().split("\\.");
 
             IPPort ipPort = ChannelManager.ClientRpcIoc.get(split1[split1.length-1]);
-            BioSocket bioSocket = ipPort.getBioSocket();
-    //        3
-            bioSocket.connect();
+//            BioSocket bioSocket = ipPort.getBioSocket();
+            Client client = ipPort.getClient();
+            //        3
+//            bioSocket.connect();
+//            client.startrun();
     //        4
-            bioSocket.sendData(bytes);
+//            bioSocket.sendData(bytes);
+            while (client.getChannel()==null){
+                Thread.sleep(10);
+            }
+            client.getChannel().writeAndFlush(messageForNetty);
     //        5
-            byte[] bytes1 = bioSocket.receiveData();
-    //        6
-            MessageForNetty netty = (MessageForNetty)SerializableAndUnSerializable.ByteToString(bytes1);
+//            byte[] bytes1 = bioSocket.receiveData();
+            return client.queue.take();
+            //        6
+//            MessageForNetty netty = (MessageForNetty)SerializableAndUnSerializable.ByteToString(bytes1);
     //        7
-            MessageResult Result = netty.getMessageResult();
+//            MessageResult Result = netty.getMessageResult();
     //        8,9
-            return Result.getObject();
+//            return Result.getObject();
         }
     }
-
