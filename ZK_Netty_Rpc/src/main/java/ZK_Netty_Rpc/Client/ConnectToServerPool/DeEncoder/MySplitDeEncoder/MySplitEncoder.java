@@ -1,6 +1,7 @@
-package ZK_Netty_Rpc.Client.ConnectToServerPool.DeEncoder;
+package ZK_Netty_Rpc.Client.ConnectToServerPool.DeEncoder.MySplitDeEncoder;
 
 import ZK_Netty_Rpc.Info.MessageForNetty;
+import ZK_Netty_Rpc.Info.MyDeEncoderProtocol;
 import ZK_Netty_Rpc.Info.SerializableAndUnSerializable;
 import ZK_Netty_Rpc.Info.argsInfo;
 import io.netty.buffer.ByteBuf;
@@ -12,10 +13,10 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * 自定义编码器
  * 将MessageForNetty序列化成字节数组
  */
-public class MyEncoder  extends MessageToByteEncoder<MessageForNetty> {
+public class MySplitEncoder extends MessageToByteEncoder<MyDeEncoderProtocol> {
     @Override
-    protected void encode(ChannelHandlerContext ctx, MessageForNetty msg, ByteBuf out) throws Exception {
-        byte[] bytes = SerializableAndUnSerializable.StringToByte(msg);
+    protected void encode(ChannelHandlerContext ctx, MyDeEncoderProtocol msg, ByteBuf out) throws Exception {
+        byte[] bytes = SerializableAndUnSerializable.StringToByte(msg.getMessageForNetty());
         out.writeBytes(bytes);
         out.writeBytes(argsInfo.FrameSplit.getBytes());
     }
