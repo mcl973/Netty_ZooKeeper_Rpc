@@ -60,10 +60,12 @@ public class ReceiveMessageAndExcute implements Runnable {
         MessageResult mr  = new MessageResult(classname,methodname,invoke);
         MessageForNetty messageForNetty = new MessageForNetty();
         messageForNetty.setMessageResult(mr);
+        MyDeEncoderProtocol myDeEncoderProtocol = new MyDeEncoderProtocol(messageForNetty);
+
         /**
          * 将结果返还给client
          */
-        channel.writeAndFlush(messageForNetty);
+        channel.writeAndFlush(myDeEncoderProtocol);
     }
     @Deprecated
     public Class[] getParagrames(String[] args){
