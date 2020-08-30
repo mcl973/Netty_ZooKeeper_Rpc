@@ -27,9 +27,11 @@ public class argsInfo {
     public static String connectString = "192.168.127.5:2181,192.168.127.6:2181,192.168.127.7:2181";
     //    需要创建的节点
     public static String path = "/ZK_Netty_Rpc";
+//    这个而是用于接口文件的分割的，如将本地的接口文件组合使用这个并上传到zookeeper上，将数据从zookeeper上下载到本地使用这个
+//    分隔符来划分不同的接口文件
     public static String FileSplit = "#####";
-    //  设置分割大小,默认是1k
-    final public static int FrameSplitSize = 1024;
+    //  设置分割大小,默认是1M,这个值需要根据自己的业务需求来设定上限值。
+    final public static int FrameSplitSize = 1024*1024;
 //    这里不使用网上经常使用的\t的原因是可能类的序列化成的字节数组中也包含了\t，所以这里使用的是自定义的分隔符即五个#
     public static String FrameSplit = "#####";
     public static ByteBuf BasedFrame = Unpooled.copiedBuffer(FrameSplit.getBytes());
@@ -43,7 +45,8 @@ public class argsInfo {
     public static final int Default_Thread_Number = Runtime.getRuntime().availableProcessors()*2;
 
     public static final String aftername = "Impl";
-
+    
+    @Deprecated
     public static int maxReadSize = 1024*1024;
 
 /**
