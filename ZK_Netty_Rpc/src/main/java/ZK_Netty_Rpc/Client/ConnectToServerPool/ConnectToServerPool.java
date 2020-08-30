@@ -14,9 +14,12 @@ public class ConnectToServerPool {
         addConnextLinkForIPAndPort(split[0],Integer.parseInt(split[1]));
     }
     public static void addConnextLinkForIPAndPort(String ip,int port){
-        Client client = new Client(ip, port);
-        connectToServerPool.put(ip+":"+port,client);
-        defaultThreadPoolExcutor.execute(client);
+        //        对于同一个服务器的多个文件，只需要创建一次连接即可
+        if(!connectToServerPool.containsKey(ip+":"+port)) {
+            Client client = new Client(ip, port);
+            connectToServerPool.put(ip + ":" + port, client);
+            defaultThreadPoolExcutor.execute(client);
+        }
     }
     public static Client getConnectLink(String ipport){
         return connectToServerPool.get(ipport);
