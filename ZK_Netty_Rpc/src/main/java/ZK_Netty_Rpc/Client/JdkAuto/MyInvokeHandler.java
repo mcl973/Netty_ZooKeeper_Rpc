@@ -79,7 +79,8 @@
             while (client.getChannel()==null){
                 Thread.sleep(10);
             }
-            client.getChannel().writeAndFlush(messageForNetty);
+            MyDeEncoderProtocol myDeEncoderProtocol = new MyDeEncoderProtocol(messageForNetty);
+            client.getChannel().writeAndFlush(myDeEncoderProtocol);
     //        5
 //            byte[] bytes1 = bioSocket.receiveData();
             return client.getMapqueue().get(key).take();
