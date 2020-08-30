@@ -8,6 +8,7 @@
 
     import java.lang.reflect.InvocationHandler;
     import java.lang.reflect.Method;
+    import java.util.concurrent.SynchronousQueue;
 
 
     public class MyInvokeHandler implements InvocationHandler {
@@ -64,6 +65,12 @@
             IPPort ipPort = ChannelManager.ClientRpcIoc.get(split1[split1.length-1]);
 //            BioSocket bioSocket = ipPort.getBioSocket();
             Client client = ipPort.getClient();
+//              在client里添加上返回需要拿去的阻塞队列和具体的函数名的映射
+            String key = (messageGreatePrepare.getInterfaceName()+"."+messageGreatePrepare.getMethoedName()).trim();
+            if (!client.getMapqueue().containsKey(key)) {
+                SynchronousQueue<Object> synchronousQueue = new SynchronousQueue<>();
+                client.getMapqueue().put(key, synchronousQueue);
+            }
             //        3
 //            bioSocket.connect();
 //            client.startrun();
@@ -75,7 +82,7 @@
             client.getChannel().writeAndFlush(messageForNetty);
     //        5
 //            byte[] bytes1 = bioSocket.receiveData();
-            return client.queue.take();
+            return client.getMapqueue().get(key).take();
             //        6
 //            MessageForNetty netty = (MessageForNetty)SerializableAndUnSerializable.ByteToString(bytes1);
     //        7
