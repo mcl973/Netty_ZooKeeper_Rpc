@@ -11,8 +11,8 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import java.util.concurrent.SynchronousQueue;
 
 public class ClientallHandlers extends ChannelInitializer<SocketChannel> {
-    SynchronousQueue<Object> queue;
-    public ClientallHandlers(SynchronousQueue<Object> queue){
+    ConcurrentHashMap<String,SynchronousQueue<Object>> queue;
+    public ClientallHandlers(ConcurrentHashMap<String,SynchronousQueue<Object>> queue){
         this.queue = queue;
     }
     @Override
