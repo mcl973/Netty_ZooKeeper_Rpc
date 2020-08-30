@@ -2,6 +2,7 @@ package ZK_Netty_Rpc.Server;
 
 import ZK_Netty_Rpc.Info.MessageForNetty;
 import ZK_Netty_Rpc.Info.MessagePrepare;
+import ZK_Netty_Rpc.Info.MyDeEncoderProtocol;
 import ZK_Netty_Rpc.Info.SerializableAndUnSerializable;
 import ZK_Netty_Rpc.Server.HandlerRpcMethod.ReceiveMessageAndExcute;
 import io.netty.buffer.ByteBuf;
@@ -9,10 +10,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import ZK_Netty_Rpc.Extras.*;
 import io.netty.util.CharsetUtil;
+import io.netty.util.concurrent.FastThreadLocal;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class ServerHandler extends SimpleChannelInboundHandler<MessageForNetty> {
+public class ServerHandler extends SimpleChannelInboundHandler<MyDeEncoderProtocol> {
     private ThreadPoolExecutor threadPoolExecutor = MyThreadPool.getDefaultThreadPoolExcutor();
 
     @Override
@@ -38,8 +41,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<MessageForNetty> 
      * @throws Exception
      */
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx,MessageForNetty msg) throws Exception {
-        System.out.println("///////////////////////");
-        threadPoolExecutor.submit(new ReceiveMessageAndExcute(msg.getMessagePrepare(),ctx.channel()));
+    protected void channelRead0(ChannelHandlerContext ctx,MyDeEncoderProtocol msg) throws Exception {
+        threadPoolExecutor.submit(new ReceiveMessageAndExcute(msg.getMessageForNetty().getMessagePrepare(),ctx.channel()));
     }
 }
