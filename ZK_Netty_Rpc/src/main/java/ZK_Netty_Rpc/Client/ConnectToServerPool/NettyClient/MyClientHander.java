@@ -13,8 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.SynchronousQueue;
 
 public class MyClientHander extends SimpleChannelInboundHandler<MessageForNetty> {
-    SynchronousQueue<Object> queue;
-    public MyClientHander(SynchronousQueue<Object> queue){
+    ConcurrentHashMap<String,SynchronousQueue<Object>> queue;
+    public MyClientHander(ConcurrentHashMap<String,SynchronousQueue<Object>> queue){
         this.queue = queue;
     }
 
@@ -30,6 +30,13 @@ public class MyClientHander extends SimpleChannelInboundHandler<MessageForNetty>
     @Override
     protected void channelRead0(ChannelHandlerContext ctx,MessageForNetty msg) throws Exception {
         MessageResult mr = msg.getMessageResult();
-        queue.put(mr.getObject());
+        String key = (mr.getClassname()+"."+mr.getMethodname()).trim();
+        if (queue.containsKey(key))
+            queue.get(key).put(mr.getObject());
+        else {
+            SynchronousQueue<Object> synchronousQueue = new SynchronousQueue<>();
+            synchronousQueue.put(mr.getObject());
+            queue.put(key,synchronousQueue);
+        }
     }
 }
