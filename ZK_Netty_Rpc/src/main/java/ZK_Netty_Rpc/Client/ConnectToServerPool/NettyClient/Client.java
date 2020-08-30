@@ -15,7 +15,10 @@ public class Client extends Thread{
     private String ip;
     private int port;
     private Channel channel;
-    public SynchronousQueue<Object> queue = new SynchronousQueue<>();
+    /**
+     * 为每一个类的每一个函数都设置一个SynchronousQueue，防止出现多线程情况下的函数拿去其他函数的结果的情况。
+     */
+    public ConcurrentHashMap<String,SynchronousQueue<Object>> mapqueue = new ConcurrentHashMap<>();
 
     public Client(String ip, int port) {
         this.ip = ip;
